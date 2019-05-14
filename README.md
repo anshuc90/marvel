@@ -33,6 +33,11 @@ For the graphs below (3-8),
 
 12. Top 10 most appeared charaters based on frequency from 2008-2018: Using subset of data from 2008 to 2018, we found out that X-men as characters have appeared most in comics (15.32%) followed by Spider-Man (14.91%) followed by Iron Man (11.86%)
 
+13. Top distribution based on Alignment- Power is the dominating trait. The least dominating trait is Intelligence amongst good and bad characters.
+
+14. Top distribution based on Gender- Power is the dominating trait. The least dominating trait is Intelligence amongst males and females.
+
+
 
 ## Dependencies
 

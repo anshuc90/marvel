@@ -17,6 +17,7 @@ charStats = pd.read_csv("data/charcters_stats.csv")
 comics = pd.read_csv("data/comics.csv")
 marvelChar = pd.read_csv("data/marvel_characters_info.csv")
 
+
 ####################################################################################################################################
 ####################################################################################################################################
 
@@ -81,6 +82,38 @@ def draw_basic_bars():
 ####################################################################################################################################
 
 
+#data preprocessing
+
+#comics and characters 
+
+#drop description column from comics data
+comics = comics.drop(columns="description")
+
+#extracting (year) from title
+comics['comicYear'] = comics['title'].str.extract('(\d\d\d\d)', expand= True)
+comics['comicYear'] = pd.to_numeric(comics['comicYear'])
+
+#separating charName from name and stripping blanks
+characters[['characterName', 'origName']] = characters['name'].str.split('(', expand= True)
+characters['characterName'] = characters['characterName'].str.strip()
+
+#merging datasets on common variables
+merged1 = pd.merge(characters, char2comm, left_on='characterID', right_on='characterID', how="right")
+merged2 = pd.merge(comics, merged1, left_on='comicID', right_on='comicID', how="right")
+
+#remove duplicates
+merged_fin2 = merged2[~merged2[['comicID','characterID']].apply(frozenset, axis=1).duplicated()]
+
+#take subset of data for last 10 years- 2008-2018
+merged_fin2 = merged_fin2[(merged_fin2['comicYear'] >= 2008) & (merged_fin2['comicYear'] <= 2018)]
+
+#count of freq of char as a new column 
+merged_fin2['countChar'] = merged_fin2.groupby('characterName')['characterName'].transform(len)
+
+#remove duplicates
+merged_fin3 = merged_fin2[~merged_fin2[['characterName']].apply(frozenset, axis=1).duplicated()]
+
+
 #3. basic graph (2 cols- top 10)
 
 def basic_relation_graph(df, col, col2, title):
@@ -99,11 +132,10 @@ def basic_relation_graph(df, col, col2, title):
 		i.set_rotation(20)
 	plt.show()
 
-
 def draw_basic_relations():
 
 	#a. basic -top 10 powerful charaters(char names) based on total(stats) column
-	basic_relation_graph(charStats, 'Total', 'Name', 'Top 10 powerful charaters based on Total stats')
+	basic_relation_graph(charStats, 'Total', 'Name', 'Top 10 powerful charaters based on Total Stats')
 
 	#b. basic -top 10 powerful good & bad characters based on total stats
 
@@ -119,35 +151,6 @@ def draw_basic_relations():
 
 	#c. basic -top 10 count of characters in last 10 years
 
-	#comics and characters 
-
-	#drop description column from comics data
-	comics = comics.drop(columns="description")
-
-	#extracting (year) from title
-	comics['comicYear'] = comics['title'].str.extract('(\d\d\d\d)', expand= True)
-	comics['comicYear'] = pd.to_numeric(comics['comicYear'])
-
-	#separating charName from name and stripping blanks
-	characters[['characterName', 'origName']] = characters['name'].str.split('(', expand= True)
-	characters['characterName'] = characters['characterName'].str.strip()
-
-	#merging datasets on common variables
-	merged1 = pd.merge(characters, char2comm, left_on='characterID', right_on='characterID', how="right")
-	merged2 = pd.merge(comics, merged1, left_on='comicID', right_on='comicID', how="right")
-
-	#remove duplicates
-	merged_fin2 = merged2[~merged2[['comicID','characterID']].apply(frozenset, axis=1).duplicated()]
-
-	#take subset of data for last 10 years- 2008-2018
-	merged_fin2 = merged_fin2[(merged_fin2['comicYear'] >= 2008) & (merged_fin2['comicYear'] <= 2018)]
-
-	#count of freq of char as a new column 
-	merged_fin2['countChar'] = merged_fin2.groupby('characterName')['characterName'].transform(len)
-
-	#remove duplicates
-	merged_fin3 = merged_fin2[~merged_fin2[['characterName']].apply(frozenset, axis=1).duplicated()]
-
 	basic_relation_graph(merged_fin3, 'countChar', 'characterName', 'Top 10 most appeared charaters based on frequency from 2008-2018')
 
 
@@ -157,7 +160,7 @@ def draw_basic_relations():
 
 # 3. basic stack graph (1 x-axis col, multiple y-axis cols)
 
-def basic_stack_graph(df, col, col2, labelx, labely, title):
+def basic_stack_graph(df, col, col2, title, ticks):
 	ax = df.groupby(col).nunique().plot(kind="bar",  figsize=(8,8), stacked=True, x=col, y= col2)
 	ax.set_alpha(0.9)
 	ax.set_title(title, fontsize=16)
@@ -169,27 +172,30 @@ def basic_stack_graph(df, col, col2, labelx, labely, title):
 	for i in ax.patches:
 		ax.text(i.get_x()-.03, i.get_height()+.5, \
             str(round((i.get_height()/total)*100, 2))+'%', fontsize=15,color='dimgrey')
+	ax = plt.gca()
+	ax.set_xticks([0,1,2])
+	ax.set_xticklabels(ticks)
 	plt.show()
-
 
 def draw_basic_stack():
 	#a. trait distribution within Alignment distribution (frequency)
-	basic_stack_graph(charStats, 'Alignment', ['Intelligence','Strength','Speed','Durability','Power','Combat'], 'Alignment', 'Total Frequency', 'Trait distribution based on Alignment')
+	basic_stack_graph(charStats, 'Alignment', ['Intelligence','Strength','Speed','Durability','Power','Combat'], 'Trait distribution based on Alignment', ['good','bad', 'neutral'])
 
 	#b. trait distribution within gender distribution (frequency)
-	basic_stack_graph(merged_fin1, 'Gender', ['Intelligence','Strength','Speed','Durability','Power','Combat'], 'Gender', 'Total Frequency', 'Trait distribution based on Gender')
+	basic_stack_graph(merged_fin1, 'Gender', ['Intelligence','Strength','Speed','Durability','Power','Combat'], 'Trait distribution based on Gender', ['male','female', '-'])
 
 
 ####################################################################################################################################
 ####################################################################################################################################
 
 #.set_index(col) .reset_index(name=col)
+#np.arange(len(df[col].drop_duplicates()))
 #.apply(lambda x: x.reset_index(drop=True)).drop('A',axis=1).reset_index()
-
-
-
 
 #merged_fin2.to_csv('result/res2.csv')
 
 if __name__ == "__main__":
-	draw_basic_bars()
+	draw_basic_stack()
+
+
+

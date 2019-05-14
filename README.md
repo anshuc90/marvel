@@ -1,10 +1,12 @@
 
 # Marvel Data exploration with graphs
 
+![graphs](https://github.com/anshuc90/marvel/tree/master/graphs)
+
 
 ## Insights
 
-1. Percentage Distribution of Top 10 Races: In the given data, the major chunk of races are unknown (47.28%). From the known races, Humans are the most common race (32.35%) followed by Mutants and Gods/Eternal ![](graphs/Percentage Distribution of Top 10 Races.png)
+1. Percentage Distribution of Top 10 Races: In the given data, the major chunk of races are unknown (47.28%). From the known races, Humans are the most common race (32.35%) followed by Mutants and Gods/Eternal 
 
 2. Percentage Distribution of Top 10 Publishers: Based on the given data, we can see that the market is dominated by the top 2 players- Marvel comics dominate the market by 56.23% forllowed by DC comics at 31.16%.
 

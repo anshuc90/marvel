@@ -38,29 +38,35 @@ For the graphs below (3-8),
 
 ### For DataFrame operations
 
+```
 import pandas as pd
 import numpy as np
+```
 
 ### For regular expression to treat special characters
 
+```
 import re
+```
 
 ### For graphs
 
+```
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib
+```
 
 Developed multiple graphs to gain an insight on the data provided:
 
 ## Datasets
 
-characters.csv
-charactersToComics.csv
-superheroes_power_matrix.csv
-charcters_stats.csv
-comics.csv
-marvel_characters_info.csv
+- characters.csv
+- charactersToComics.csv
+- superheroes_power_matrix.csv
+- charcters_stats.csv
+- comics.csv
+- marvel_characters_info.csv
 
 I have made the code modular by incoporating functions.
 

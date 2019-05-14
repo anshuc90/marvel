@@ -38,6 +38,8 @@ def basic_count_graph(df, col, title):
 	for i in ax.get_xticklabels():
 		i.set_rotation(20)
 	plt.show()
+	#fig = ax.get_figure()
+	#fig.savefig("graphs/{}.png".format(title))
 
 def draw_basic_counts():
 	#a. top 10 races (frequency distribution)
@@ -59,6 +61,7 @@ def basic_bar_sns(df, col, col2, col3, title):
 	for p in ax.patches:
 		ax.annotate(format(p.get_height(), '.2f')+'%', (p.get_x() + p.get_width() / 2., p.get_height()), ha = 'center', va = 'center', xytext = (0, 10), textcoords = 'offset points')
 	plt.show()
+
 
 # marvelChar and charStats
 
@@ -168,10 +171,10 @@ def basic_stack_graph(df, col, col2, title, ticks):
 	totals = []
 	for i in ax.patches:
 		totals.append(i.get_height())
-	total = sum(totals)
-	for i in ax.patches:
-		ax.text(i.get_x()-.03, i.get_height()+.5, \
-            str(round((i.get_height()/total)*100, 2))+'%', fontsize=15,color='dimgrey')
+	# total = sum(totals)
+	# for i in ax.patches:
+	# 	ax.text(i.get_x()-.03, i.get_height()+.5, \
+ #            str(round((i.get_height()/total)*100, 2))+'%', fontsize=15,color='dimgrey')
 	ax = plt.gca()
 	ax.set_xticks([0,1,2])
 	ax.set_xticklabels(ticks)
@@ -182,7 +185,7 @@ def draw_basic_stack():
 	basic_stack_graph(charStats, 'Alignment', ['Intelligence','Strength','Speed','Durability','Power','Combat'], 'Trait distribution based on Alignment', ['good','bad', 'neutral'])
 
 	#b. trait distribution within gender distribution (frequency)
-	basic_stack_graph(merged_fin1, 'Gender', ['Intelligence','Strength','Speed','Durability','Power','Combat'], 'Trait distribution based on Gender', ['male','female', '-'])
+	basic_stack_graph(merged_fin1, 'Gender', ['Intelligence','Strength','Speed','Durability','Power','Combat'], 'Trait distribution based on Gender', ['unknown','female', 'male'])
 
 
 ####################################################################################################################################
@@ -195,7 +198,7 @@ def draw_basic_stack():
 #merged_fin2.to_csv('result/res2.csv')
 
 if __name__ == "__main__":
-	draw_basic_stack()
+	draw_basic_counts()
 
 
 
